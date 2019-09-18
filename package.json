@@ -1,7 +1,7 @@
 {
   "name": "input-validator",
   "version": "0.0.1",
-  "description": "Chain rules to get validity of input value with optional transformed value",
+  "description": "Chain rules to get validity of input with optional transformed value",
   "keywords": [],
   "main": "dist/input-validator.umd.js",
   "module": "dist/input-validator.es5.js",
