@@ -6,8 +6,8 @@ interface Rule {
 }
 
 interface Result {
-    firstFailRule: Rule;
-    allFailRules: Rule[];
+    firstFailedRule: Rule;
+    allFailedRules: Rule[];
     valid: boolean;
     transformedValue: any;
 }
@@ -19,18 +19,18 @@ export const createInputValidator = (rules: RulesParam) => (value: any): Result 
     // iterate rules
     return newRules.reduce(
         (acc, rule, index) => {
-            const { test, transformValue } = rule;
+            const {test, transformValue} = rule;
             // in the first rule, make transformedValue the same as value
             acc.transformedValue = index === 0 ? value : acc.transformedValue;
             // run test
             const valid = test ? test(value, acc.transformedValue) : true;
             if (!valid) {
                 // get first failed rule
-                acc.firstFailRule = Object.keys(acc.firstFailRule).length
-                    ? acc.firstFailRule
+                acc.firstFailedRule = Object.keys(acc.firstFailedRule).length
+                    ? acc.firstFailedRule
                     : rule;
                 // accumulate all failed rules
-                acc.allFailRules = acc.allFailRules.concat(rule);
+                acc.allFailedRules = acc.allFailedRules.concat(rule);
                 // invalidate
                 acc.valid = false;
             } else {
@@ -43,8 +43,8 @@ export const createInputValidator = (rules: RulesParam) => (value: any): Result 
         },
         // initial state
         {
-            firstFailRule: {} as Rule,
-            allFailRules: [],
+            firstFailedRule: {} as Rule,
+            allFailedRules: [],
             valid: true,
             transformedValue: null
         } as Result
