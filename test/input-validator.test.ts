@@ -1,4 +1,4 @@
-import { createInputValidator } from '../src/input-validator';
+import {createInputValidator} from '../src/input-validator';
 
 describe('single rule valid', () => {
     let mockedTest: any;
