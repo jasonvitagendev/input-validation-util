@@ -1,5 +1,5 @@
 {
-  "name": "input-validator",
+  "name": "input-validation-util",
   "version": "0.0.1",
   "description": "Chain rules to get validity of input with optional transformed value",
   "keywords": [],
