@@ -18,8 +18,10 @@ export const createInputValidator = (rules: RulesParam) => (value: any): Result 
     const newRules = Array.isArray(rules) ? rules : [rules];
     // iterate rules
     return newRules.reduce(
-        (acc, rule) => {
-            const {test, transformValue} = rule;
+        (acc, rule, index) => {
+            const { test, transformValue } = rule;
+            // in the first rule, make transformedValue the same as value
+            acc.transformedValue = index === 0 ? value : acc.transformedValue;
             // run test
             const valid = test ? test(value, acc.transformedValue) : true;
             if (!valid) {
