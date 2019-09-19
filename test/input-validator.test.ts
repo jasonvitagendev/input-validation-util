@@ -17,8 +17,8 @@ describe('single rule valid', () => {
         expect(mockedTest).toBeCalledWith(123, 123);
         expect(validationResult.valid).toBeTruthy();
         expect(validationResult.transformedValue).toEqual(123);
-        expect(validationResult.firstFailRule).toEqual({});
-        expect(validationResult.allFailRules.length).toEqual(0);
+        expect(validationResult.firstFailedRule).toEqual(null);
+        expect(validationResult.allFailedRules.length).toEqual(0);
 
         validate('abc');
         expect(mockedTest).toBeCalledWith('abc', 'abc');
@@ -42,12 +42,12 @@ describe('single rule invalid', () => {
         expect(mockedTest).toBeCalledWith('abc', 'abc');
         expect(validationResult.valid).toBeFalsy();
         expect(validationResult.transformedValue).toEqual('abc');
-        expect(validationResult.firstFailRule).toEqual({
+        expect(validationResult.firstFailedRule).toEqual({
             test: mockedTest,
             ruleName: 'isNumber'
         });
-        expect(validationResult.allFailRules.length).toEqual(1);
-        expect(validationResult.allFailRules[0]).toEqual({
+        expect(validationResult.allFailedRules.length).toEqual(1);
+        expect(validationResult.allFailedRules[0]).toEqual({
             test: mockedTest,
             ruleName: 'isNumber'
         });
@@ -76,8 +76,8 @@ describe('single rule valid with transformValue', () => {
         expect(mockedTransformValue).toBeCalledWith(123, 123);
         expect(validationResult.valid).toBeTruthy();
         expect(validationResult.transformedValue).toEqual(123);
-        expect(validationResult.firstFailRule).toEqual({});
-        expect(validationResult.allFailRules.length).toEqual(0);
+        expect(validationResult.firstFailedRule).toEqual(null);
+        expect(validationResult.allFailedRules.length).toEqual(0);
     });
 });
 
@@ -102,13 +102,13 @@ describe('single rule invalid with transformValue', () => {
         expect(mockedTransformValue).toBeCalledTimes(0);
         expect(validationResult.valid).toBeFalsy();
         expect(validationResult.transformedValue).toEqual('abc');
-        expect(validationResult.firstFailRule).toEqual({
+        expect(validationResult.firstFailedRule).toEqual({
             test: mockedTest,
             transformValue: mockedTransformValue,
             ruleName: 'isNumber'
         });
-        expect(validationResult.allFailRules.length).toEqual(1);
-        expect(validationResult.allFailRules[0]).toEqual({
+        expect(validationResult.allFailedRules.length).toEqual(1);
+        expect(validationResult.allFailedRules[0]).toEqual({
             test: mockedTest,
             transformValue: mockedTransformValue,
             ruleName: 'isNumber'
@@ -119,12 +119,14 @@ describe('single rule invalid with transformValue', () => {
 describe('single rule invalid with resetInputToValue', () => {
     let mockedTest: any;
     let validate: any;
+    let mockedResetInput: any;
     beforeEach(() => {
         mockedTest = jest.fn(value => value !== 0);
+        mockedResetInput = jest.fn(value => 1);
         validate = createInputValidator({
             ruleName: 'isNumber',
             test: mockedTest,
-            resetInputToValue: 1
+            resetInvalidInput: mockedResetInput
         });
     });
 
@@ -133,17 +135,17 @@ describe('single rule invalid with resetInputToValue', () => {
         expect(mockedTest).toBeCalledTimes(1);
         expect(mockedTest).toBeCalledWith(0, 0);
         expect(validationResult.valid).toBeFalsy();
-        expect(validationResult.firstFailRule.resetInputToValue).toEqual(1);
-        expect(validationResult.firstFailRule).toEqual({
+        expect(validationResult.resetInputValue).toEqual(1);
+        expect(validationResult.firstFailedRule).toEqual({
             test: mockedTest,
             ruleName: 'isNumber',
-            resetInputToValue: 1
+            resetInvalidInput: mockedResetInput
         });
-        expect(validationResult.allFailRules.length).toEqual(1);
-        expect(validationResult.allFailRules[0]).toEqual({
+        expect(validationResult.allFailedRules.length).toEqual(1);
+        expect(validationResult.allFailedRules[0]).toEqual({
             test: mockedTest,
             ruleName: 'isNumber',
-            resetInputToValue: 1
+            resetInvalidInput: mockedResetInput
         });
     });
 });
@@ -175,8 +177,8 @@ describe('multiple rules valid', () => {
         expect(mockedIsNumber).toBeCalledWith(123, 123);
         expect(validationResult.valid).toBeTruthy();
         expect(validationResult.transformedValue).toEqual(123);
-        expect(validationResult.firstFailRule).toEqual({});
-        expect(validationResult.allFailRules.length).toEqual(0);
+        expect(validationResult.firstFailedRule).toEqual(null);
+        expect(validationResult.allFailedRules.length).toEqual(0);
     });
 });
 
@@ -207,16 +209,16 @@ describe('multiple rules invalid', () => {
         expect(mockedIsNumber).toBeCalledWith('abc', 'abc');
         expect(validationResult.valid).toBeFalsy();
         expect(validationResult.transformedValue).toEqual('abc');
-        expect(validationResult.firstFailRule).toEqual({
+        expect(validationResult.firstFailedRule).toEqual({
             test: mockedIsNumber,
             ruleName: 'isNumber'
         });
-        expect(validationResult.allFailRules.length).toEqual(2);
-        expect(validationResult.allFailRules[0]).toEqual({
+        expect(validationResult.allFailedRules.length).toEqual(2);
+        expect(validationResult.allFailedRules[0]).toEqual({
             test: mockedIsNumber,
             ruleName: 'isNumber'
         });
-        expect(validationResult.allFailRules[1]).toEqual({
+        expect(validationResult.allFailedRules[1]).toEqual({
             test: mockedIsGreaterThan10,
             ruleName: 'isGreaterThan10'
         });
@@ -261,8 +263,8 @@ describe('multiple rules valid with transformValue', () => {
         expect(mockedFormatCurrency).toBeCalledWith(123, '123.00');
         expect(validationResult.valid).toBeTruthy();
         expect(validationResult.transformedValue).toEqual('RM123.00');
-        expect(validationResult.firstFailRule).toEqual({});
-        expect(validationResult.allFailRules.length).toEqual(0);
+        expect(validationResult.firstFailedRule).toEqual(null);
+        expect(validationResult.allFailedRules.length).toEqual(0);
     });
 });
 
@@ -272,11 +274,13 @@ describe('multiple rules invalid with transformValue', () => {
     let mockedToFixed: any;
     let mockedFormatCurrency: any;
     let validate: any;
+    let mockedResetInvalidInput: any;
     beforeEach(() => {
         mockedIsNumber = jest.fn(value => !isNaN(value));
         mockedIsGreaterThan10 = jest.fn(value => value > 10);
         mockedToFixed = jest.fn(value => value.toFixed(2));
         mockedFormatCurrency = jest.fn((value, transformedValue) => `RM${transformedValue}`);
+        mockedResetInvalidInput = jest.fn((value, transformedValue) => transformedValue + 15);
         validate = createInputValidator([
             {
                 ruleName: 'isNumber',
@@ -285,7 +289,8 @@ describe('multiple rules invalid with transformValue', () => {
             {
                 ruleName: 'isGreaterThan10',
                 test: mockedIsGreaterThan10,
-                transformValue: mockedToFixed
+                transformValue: mockedToFixed,
+                resetInvalidInput: mockedResetInvalidInput
             },
             {
                 ruleName: 'formatCurrency',
@@ -304,16 +309,19 @@ describe('multiple rules invalid with transformValue', () => {
         expect(mockedFormatCurrency).toBeCalledWith(5, 5);
         expect(validationResult.valid).toBeFalsy();
         expect(validationResult.transformedValue).toEqual('RM5');
-        expect(validationResult.firstFailRule).toEqual({
+        expect(validationResult.resetInputValue).toEqual(20);
+        expect(validationResult.firstFailedRule).toEqual({
             test: mockedIsGreaterThan10,
             ruleName: 'isGreaterThan10',
-            transformValue: mockedToFixed
+            transformValue: mockedToFixed,
+            resetInvalidInput: mockedResetInvalidInput
         });
-        expect(validationResult.allFailRules.length).toEqual(1);
-        expect(validationResult.allFailRules[0]).toEqual({
+        expect(validationResult.allFailedRules.length).toEqual(1);
+        expect(validationResult.allFailedRules[0]).toEqual({
             test: mockedIsGreaterThan10,
             ruleName: 'isGreaterThan10',
-            transformValue: mockedToFixed
+            transformValue: mockedToFixed,
+            resetInvalidInput: mockedResetInvalidInput
         });
     });
 
@@ -327,12 +335,12 @@ describe('multiple rules invalid with transformValue', () => {
         expect(mockedFormatCurrency).toBeCalledWith('abc', 'abc');
         expect(validationResult.valid).toBeFalsy();
         expect(validationResult.transformedValue).toEqual('RMabc');
-        expect(validationResult.firstFailRule).toEqual({
+        expect(validationResult.firstFailedRule).toEqual({
             test: mockedIsNumber,
             ruleName: 'isNumber'
         });
-        expect(validationResult.allFailRules.length).toEqual(2);
-        expect(validationResult.allFailRules[0]).toEqual({
+        expect(validationResult.allFailedRules.length).toEqual(2);
+        expect(validationResult.allFailedRules[0]).toEqual({
             test: mockedIsNumber,
             ruleName: 'isNumber'
         });

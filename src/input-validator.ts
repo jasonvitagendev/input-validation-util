@@ -1,15 +1,16 @@
 interface Rule {
     test?: (value: any, transformedValue: any) => boolean;
-    resetInputToValue?: any;
+    resetInvalidInput?: (value: any, transformedValue: any) => any;
     transformValue?: (value: any, transformedValue: any) => any;
     ruleName: string;
 }
 
 interface Result {
-    firstFailedRule: Rule;
+    firstFailedRule: Rule | null;
     allFailedRules: Rule[];
     valid: boolean;
     transformedValue: any;
+    resetInputValue: any;
 }
 
 type RulesParam = Rule | Rule[];
@@ -19,16 +20,19 @@ export const createInputValidator = (rules: RulesParam) => (value: any): Result 
     // iterate rules
     return newRules.reduce(
         (acc, rule, index) => {
-            const {test, transformValue} = rule;
+            const {test, transformValue, resetInvalidInput} = rule;
             // in the first rule, make transformedValue the same as value
             acc.transformedValue = index === 0 ? value : acc.transformedValue;
             // run test
             const valid = test ? test(value, acc.transformedValue) : true;
             if (!valid) {
-                // get first failed rule
-                acc.firstFailedRule = Object.keys(acc.firstFailedRule).length
-                    ? acc.firstFailedRule
-                    : rule;
+                // get the first failed rule
+                if (!acc.firstFailedRule) {
+                    acc.firstFailedRule = rule;
+                    acc.resetInputValue = resetInvalidInput
+                        ? resetInvalidInput(value, acc.transformedValue)
+                        : acc.resetInputValue;
+                }
                 // accumulate all failed rules
                 acc.allFailedRules = acc.allFailedRules.concat(rule);
                 // invalidate
@@ -43,10 +47,11 @@ export const createInputValidator = (rules: RulesParam) => (value: any): Result 
         },
         // initial state
         {
-            firstFailedRule: {} as Rule,
+            firstFailedRule: null,
             allFailedRules: [],
             valid: true,
-            transformedValue: null
+            transformedValue: null,
+            resetInputValue: null
         } as Result
     );
 };
