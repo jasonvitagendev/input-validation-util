@@ -32,7 +32,8 @@ describe('single rule invalid', () => {
         mockedTest = jest.fn(value => !isNaN(value));
         validate = createInputValidator({
             ruleName: 'isNumber',
-            test: mockedTest
+            test: mockedTest,
+            errorMessage: 'Input is not a number'
         });
     });
 
@@ -44,12 +45,14 @@ describe('single rule invalid', () => {
         expect(validationResult.transformedValue).toEqual('abc');
         expect(validationResult.firstFailedRule).toEqual({
             test: mockedTest,
-            ruleName: 'isNumber'
+            ruleName: 'isNumber',
+            errorMessage: 'Input is not a number'
         });
         expect(validationResult.allFailedRules.length).toEqual(1);
         expect(validationResult.allFailedRules[0]).toEqual({
             test: mockedTest,
-            ruleName: 'isNumber'
+            ruleName: 'isNumber',
+            errorMessage: 'Input is not a number'
         });
     });
 });

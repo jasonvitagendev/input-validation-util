@@ -3,6 +3,7 @@ interface Rule {
     resetInvalidInput?: (value: any, transformedValue: any) => any;
     transformValue?: (value: any, transformedValue: any) => any;
     ruleName: string;
+    errorMessage?: string;
 }
 
 interface Result {
