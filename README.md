@@ -98,4 +98,28 @@ if (!result.valid) {
 
 ## API Reference
 
-### createInputValidator(rules: Rule | Rule[]): (value: any) => Result
+- ### createInputValidator(rules: Rule | Rule[]): (value: any) => Result
+
+
+- ### Rule
+```javascript
+interface Rule {
+    test?: (value: any, transformedValue: any) => boolean;
+    resetInvalidInput?: (value: any, transformedValue: any) => any;
+    transformValue?: (value: any, transformedValue: any) => any;
+    ruleName: string;
+    errorMessage?: string;
+}
+```
+
+- ### Result
+```javascript
+interface Result {
+    firstFailedRule: Rule | null;
+    allFailedRules: Rule[];
+    valid: boolean;
+    inputValue: any;
+    transformedValue: any;
+    resetInputValue: any;
+}
+```
