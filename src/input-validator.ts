@@ -10,6 +10,7 @@ interface Result {
     firstFailedRule: Rule | null;
     allFailedRules: Rule[];
     valid: boolean;
+    inputValue: any;
     transformedValue: any;
     resetInputValue: any;
 }
@@ -51,6 +52,7 @@ export const createInputValidator = (rules: RulesParam) => (value: any): Result 
             firstFailedRule: null,
             allFailedRules: [],
             valid: true,
+            inputValue: value,
             transformedValue: null,
             resetInputValue: null
         } as Result

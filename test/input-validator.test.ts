@@ -16,6 +16,7 @@ describe('single rule valid', () => {
         expect(mockedTest).toBeCalledTimes(1);
         expect(mockedTest).toBeCalledWith(123, 123);
         expect(validationResult.valid).toBeTruthy();
+        expect(validationResult.inputValue).toEqual(123);
         expect(validationResult.transformedValue).toEqual(123);
         expect(validationResult.firstFailedRule).toEqual(null);
         expect(validationResult.allFailedRules.length).toEqual(0);
@@ -42,6 +43,7 @@ describe('single rule invalid', () => {
         expect(mockedTest).toBeCalledTimes(1);
         expect(mockedTest).toBeCalledWith('abc', 'abc');
         expect(validationResult.valid).toBeFalsy();
+        expect(validationResult.inputValue).toEqual('abc');
         expect(validationResult.transformedValue).toEqual('abc');
         expect(validationResult.firstFailedRule).toEqual({
             test: mockedTest,
@@ -78,6 +80,7 @@ describe('single rule valid with transformValue', () => {
         expect(mockedTransformValue).toBeCalledTimes(1);
         expect(mockedTransformValue).toBeCalledWith(123, 123);
         expect(validationResult.valid).toBeTruthy();
+        expect(validationResult.inputValue).toEqual(123);
         expect(validationResult.transformedValue).toEqual(123);
         expect(validationResult.firstFailedRule).toEqual(null);
         expect(validationResult.allFailedRules.length).toEqual(0);
@@ -104,6 +107,7 @@ describe('single rule invalid with transformValue', () => {
         expect(mockedTest).toBeCalledWith('abc', 'abc');
         expect(mockedTransformValue).toBeCalledTimes(0);
         expect(validationResult.valid).toBeFalsy();
+        expect(validationResult.inputValue).toEqual('abc');
         expect(validationResult.transformedValue).toEqual('abc');
         expect(validationResult.firstFailedRule).toEqual({
             test: mockedTest,
@@ -138,6 +142,7 @@ describe('single rule invalid with resetInputToValue', () => {
         expect(mockedTest).toBeCalledTimes(1);
         expect(mockedTest).toBeCalledWith(0, 0);
         expect(validationResult.valid).toBeFalsy();
+        expect(validationResult.inputValue).toEqual(0);
         expect(validationResult.resetInputValue).toEqual(1);
         expect(validationResult.firstFailedRule).toEqual({
             test: mockedTest,
@@ -179,6 +184,7 @@ describe('multiple rules valid', () => {
         expect(mockedIsGreaterThan10).toBeCalledTimes(1);
         expect(mockedIsNumber).toBeCalledWith(123, 123);
         expect(validationResult.valid).toBeTruthy();
+        expect(validationResult.inputValue).toEqual(123);
         expect(validationResult.transformedValue).toEqual(123);
         expect(validationResult.firstFailedRule).toEqual(null);
         expect(validationResult.allFailedRules.length).toEqual(0);
@@ -211,6 +217,7 @@ describe('multiple rules invalid', () => {
         expect(mockedIsGreaterThan10).toBeCalledTimes(1);
         expect(mockedIsNumber).toBeCalledWith('abc', 'abc');
         expect(validationResult.valid).toBeFalsy();
+        expect(validationResult.inputValue).toEqual('abc');
         expect(validationResult.transformedValue).toEqual('abc');
         expect(validationResult.firstFailedRule).toEqual({
             test: mockedIsNumber,
@@ -265,6 +272,7 @@ describe('multiple rules valid with transformValue', () => {
         expect(mockedFormatCurrency).toBeCalledTimes(1);
         expect(mockedFormatCurrency).toBeCalledWith(123, '123.00');
         expect(validationResult.valid).toBeTruthy();
+        expect(validationResult.inputValue).toEqual(123);
         expect(validationResult.transformedValue).toEqual('RM123.00');
         expect(validationResult.firstFailedRule).toEqual(null);
         expect(validationResult.allFailedRules.length).toEqual(0);
@@ -311,6 +319,7 @@ describe('multiple rules invalid with transformValue', () => {
         expect(mockedFormatCurrency).toBeCalledTimes(1);
         expect(mockedFormatCurrency).toBeCalledWith(5, 5);
         expect(validationResult.valid).toBeFalsy();
+        expect(validationResult.inputValue).toEqual(5);
         expect(validationResult.transformedValue).toEqual('RM5');
         expect(validationResult.resetInputValue).toEqual(20);
         expect(validationResult.firstFailedRule).toEqual({
@@ -337,6 +346,7 @@ describe('multiple rules invalid with transformValue', () => {
         expect(mockedFormatCurrency).toBeCalledTimes(1);
         expect(mockedFormatCurrency).toBeCalledWith('abc', 'abc');
         expect(validationResult.valid).toBeFalsy();
+        expect(validationResult.inputValue).toEqual('abc');
         expect(validationResult.transformedValue).toEqual('RMabc');
         expect(validationResult.firstFailedRule).toEqual({
             test: mockedIsNumber,
