@@ -42,20 +42,20 @@ const validate = createInputValidator([
 - **test** callback
 	- returns a boolean based on  your custom validation logic
 	- returns true for valid input
-	- first failed rule will be available in the validation result as **firstFailedRule**
-	- all failed rules will be available in the validation result as **allFailedRules**
+	- first failed [rule](#Rule) will be available in the [validation result](#Result) as **firstFailedRule**
+	- all failed [rules](#Rule) will be available in the [validation result](#Result) as **allFailedRules**
 - **transformValue** callback
 	- returns a value using your custom transformation logic
 	- the transformed value will be available as the second parameter in **test**, **transformValue** and **resetInvalidInput** callbacks of subsequent rule
-	- it is run in all conditions
+	- it is run in all conditions when
 		- **test** callback returns true
 		- **test** callback is not provided
 		- **except**: **test** callback returns false
-	- transformed value returned from the last rule will be available in the validation result as **transformedValue**
+	- transformed value returned from the last [rule](#Rule) will be available in the [validation result](#Result) as **transformedValue**
 - **resetInvalidInput** callback
 	- returns a custom value
 	- it is run only when **test** callback returns false
-	- value returned from the first failed rule will be available in the validation result as **resetInputValue**
+	- value returned from the first failed [rule](#Rule) will be available in the [validation result](#Result) as **resetInputValue**
 	- it is named as such because it is intended to provide a value to reset invalid input
 
 Validate input,
@@ -101,7 +101,7 @@ if (!result.valid) {
 - ### createInputValidator(rules: Rule | Rule[]): (value: any) => Result
 
 
-- ### Rule
+- ### <a name="Rule">Rule</a>
 ```javascript
 interface Rule {
     test?: (value: any, transformedValue: any) => boolean;
@@ -112,7 +112,7 @@ interface Rule {
 }
 ```
 
-- ### Result
+- ### <a name="Result">Result</a>
 ```javascript
 interface Result {
     firstFailedRule: Rule | null;
