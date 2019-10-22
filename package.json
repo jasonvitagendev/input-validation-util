@@ -1,6 +1,6 @@
 {
   "name": "input-validation-util",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Use declarative rules to validate and transform input value",
   "keywords": [],
   "main": "dist/input-validator.umd.js",
