@@ -33,7 +33,8 @@ const validate = createInputValidator([
     {
         ruleName: 'meet minimum value',
         test: (value, transformedValue) => transformedValue >= 10,
-        resetInvalidInput: (value, transformedValue) => `${value} is less than 10`
+        resetInvalidInput: (value, transformedValue) => `Reset to 10`,
+        errorMessage: '5 is less than 10'
     }
 ]);
 ```
@@ -57,6 +58,8 @@ const validate = createInputValidator([
 	- it is run only when **test** callback returns false
 	- value returned from the first failed [rule](#Rule) will be available in the [validation result](#Result) as **resetInputValue**
 	- it is named as such because it is intended to provide a value to reset invalid input
+- **errorMessage**
+	- custom error message string
 
 Validate input,
 
@@ -81,7 +84,7 @@ if (result.valid) {
 Validate input,
 
 ```javascript
-const result = validate(5);	
+const result = validate(5);
 ```
 
 Use the validation result,
@@ -92,7 +95,8 @@ if (!result.valid) {
     // result.transformedValue === 5
     // result.firstFailedRule.ruleName === 'meet minimum value'
     // result.allFailedRules.length === 1
-    // result.resetInputValue === '5 is less than 10'
+    // result.resetInputValue === 'Reset to 10'
+	// result.firstFailedRule.errorMessage === '5 is less than 10'
 }
 ```
 
