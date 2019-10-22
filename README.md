@@ -11,7 +11,7 @@ A library to validate and transform input value using declarative rules
 Import,
 
 ```javascript
-import {createInputValidator} from '../src/input-validator';
+import {createInputValidator} from 'input-validation-util';
 ```
 
 #### Example 1: using correct input
@@ -46,7 +46,7 @@ const validate = createInputValidator([
 	- all failed [rules](#Rule) will be available in the [validation result](#Result) as **allFailedRules**
 - **transformValue** callback
 	- returns a value using your custom transformation logic
-	- the transformed value will be available as the second parameter in **test**, **transformValue** and **resetInvalidInput** callbacks of subsequent rule
+	- the transformed value will be available as the second parameter in **test**, **transformValue** and **resetInvalidInput** callbacks of subsequent rules
 	- it is run in all conditions when
 		- **test** callback returns true
 		- **test** callback is not provided
@@ -81,7 +81,7 @@ if (result.valid) {
 Validate input,
 
 ```javascript
-const result = validate('twenty');	
+const result = validate(5);	
 ```
 
 Use the validation result,
@@ -98,10 +98,10 @@ if (!result.valid) {
 
 ## API Reference
 
-- ### createInputValidator(rules: Rule | Rule[]): (value: any) => Result
+- createInputValidator(rules: Rule | Rule[]): (value: any) => Result
 
 
-- ### <a name="Rule">Rule</a>
+- <a name="Rule">Rule</a>
 ```javascript
 interface Rule {
     test?: (value: any, transformedValue: any) => boolean;
@@ -112,7 +112,7 @@ interface Rule {
 }
 ```
 
-- ### <a name="Result">Result</a>
+- <a name="Result">Result</a>
 ```javascript
 interface Result {
     firstFailedRule: Rule | null;
